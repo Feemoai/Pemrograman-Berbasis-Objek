@@ -1,0 +1,828 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Feemoai/Pemrograman-Berbasis-Objek/blob/main/JOBSHEET%2007%20-%20PENANGANAN%20KESALAHAN%20(EXCEPTION%20HANDLING)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# JOBSHEET 07 - PENANGANAN KESALAHAN (EXCEPTION HANDLING)\n",
+        "## Nama: Ahmad Fajril Falah\n",
+        "## NIM: 4.33.25.1.01\n",
+        "## Dosen Pengampu: Ir. Prayitno, S.ST., M.T., Ph.D\n",
+        "Praktikum Pemrograman Berorientasi Objek"
+      ],
+      "metadata": {
+        "id": "headerCell"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 01: try...except Dasar dalam Metode Kelas"
+      ],
+      "metadata": {
+        "id": "markdownCell01"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class DataStore:\n",
+        "    def __init__(self, nama_store=\"Default Store\"):\n",
+        "        self._data = {}\n",
+        "        self.nama = nama_store\n",
+        "        print(f\"DataStore '{self.nama}' dibuat.\")\n",
+        "\n",
+        "    def tambah_data(self, key, value):\n",
+        "        print(f\"[{self.nama}] Menambahkan data: '{key}' -> {value}\")\n",
+        "        self._data[key] = value\n",
+        "        print(\" -> Data berhasil ditambahkan.\")\n",
+        "\n",
+        "    def get_data(self, key):\n",
+        "        print(f\"[{self.nama}] Mencoba mengambil data dengan key: '{key}'\")\n",
+        "        try:\n",
+        "            nilai = self._data[key]\n",
+        "            print(f\" -> Data ditemukan: {nilai}\")\n",
+        "            return nilai\n",
+        "        except KeyError:\n",
+        "            print(f\" -> ERROR: Key '{key}' tidak ditemukan di DataStore '{self.nama}'.\")\n",
+        "            return None\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    store_produk = DataStore(\"Toko Produk\")\n",
+        "    store_produk.tambah_data(\"Buku Tulis\", 15000)\n",
+        "    store_produk.tambah_data(\"Pensil 2B\", 2000)\n",
+        "\n",
+        "    print(\"\\nMengambil data yang ADA:\")\n",
+        "    harga_buku = store_produk.get_data(\"Buku Tulis\")\n",
+        "    if harga_buku is not None:\n",
+        "        print(f\" Harga Buku Tulis adalah: {harga_buku}\")\n",
+        "\n",
+        "    print(\"\\nMengambil data yang TIDAK ADA:\")\n",
+        "    harga_penggaris = store_produk.get_data(\"Penggaris\")\n",
+        "    if harga_penggaris is None:\n",
+        "        print(\" Harga Penggaris tidak ditemukan (sesuai ekspektasi).\")"
+      ],
+      "metadata": {
+        "id": "codeCell01",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "6ff93f71-d7ed-463c-ec8d-1fa97271850a"
+      },
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "DataStore 'Toko Produk' dibuat.\n",
+            "[Toko Produk] Menambahkan data: 'Buku Tulis' -> 15000\n",
+            " -> Data berhasil ditambahkan.\n",
+            "[Toko Produk] Menambahkan data: 'Pensil 2B' -> 2000\n",
+            " -> Data berhasil ditambahkan.\n",
+            "\n",
+            "Mengambil data yang ADA:\n",
+            "[Toko Produk] Mencoba mengambil data dengan key: 'Buku Tulis'\n",
+            " -> Data ditemukan: 15000\n",
+            " Harga Buku Tulis adalah: 15000\n",
+            "\n",
+            "Mengambil data yang TIDAK ADA:\n",
+            "[Toko Produk] Mencoba mengambil data dengan key: 'Penggaris'\n",
+            " -> ERROR: Key 'Penggaris' tidak ditemukan di DataStore 'Toko Produk'.\n",
+            " Harga Penggaris tidak ditemukan (sesuai ekspektasi).\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 02: Menangani Beberapa Exception Spesifik"
+      ],
+      "metadata": {
+        "id": "markdownCell02"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class KalkulatorAngka:\n",
+        "    def __init__(self):\n",
+        "        print(\"Kalkulator Angka siap.\")\n",
+        "\n",
+        "    def bagi(self, angka1, angka2):\n",
+        "        print(f\"\\nMencoba membagi '{angka1}' dengan '{angka2}'...\")\n",
+        "        try:\n",
+        "            num1 = float(angka1)\n",
+        "            num2 = float(angka2)\n",
+        "            hasil = num1 / num2\n",
+        "            print(f\" -> Hasil pembagian: {hasil}\")\n",
+        "            return hasil\n",
+        "        except ValueError:\n",
+        "            print(\" -> ERROR: Input tidak valid! Pastikan kedua input adalah angka.\")\n",
+        "            return None\n",
+        "        except ZeroDivisionError:\n",
+        "            print(\" -> ERROR: Tidak bisa melakukan pembagian dengan nol.\")\n",
+        "            return None\n",
+        "        except Exception as e:\n",
+        "            print(f\" -> ERROR Lainnya: Terjadi kesalahan {e}\")\n",
+        "            return None\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    calc = KalkulatorAngka()\n",
+        "    print(\"--- Tes Kalkulator ---\")\n",
+        "    hasil1 = calc.bagi(100, 5)\n",
+        "    hasil2 = calc.bagi(20, 0)\n",
+        "    hasil3 = calc.bagi(\"limapuluh\", 10)\n",
+        "    hasil4 = calc.bagi(50, \"sepuluh\")\n",
+        "\n",
+        "    print(\"\\n--- Ringkasan Hasil ---\")\n",
+        "    print(f\"Hasil 1 (100/5): {hasil1}\")\n",
+        "    print(f\"Hasil 2 (20/0): {hasil2}\")\n",
+        "    print(f\"Hasil 3 ('limapuluh'/10): {hasil3}\")\n",
+        "    print(f\"Hasil 4 (50/'sepuluh'): {hasil4}\")"
+      ],
+      "metadata": {
+        "id": "codeCell02",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "e5dde63b-14ff-4858-fce7-75b280c31f0f"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Kalkulator Angka siap.\n",
+            "--- Tes Kalkulator ---\n",
+            "\n",
+            "Mencoba membagi '100' dengan '5'...\n",
+            " -> Hasil pembagian: 20.0\n",
+            "\n",
+            "Mencoba membagi '20' dengan '0'...\n",
+            " -> ERROR: Tidak bisa melakukan pembagian dengan nol.\n",
+            "\n",
+            "Mencoba membagi 'limapuluh' dengan '10'...\n",
+            " -> ERROR: Input tidak valid! Pastikan kedua input adalah angka.\n",
+            "\n",
+            "Mencoba membagi '50' dengan 'sepuluh'...\n",
+            " -> ERROR: Input tidak valid! Pastikan kedua input adalah angka.\n",
+            "\n",
+            "--- Ringkasan Hasil ---\n",
+            "Hasil 1 (100/5): 20.0\n",
+            "Hasil 2 (20/0): None\n",
+            "Hasil 3 ('limapuluh'/10): None\n",
+            "Hasil 4 (50/'sepuluh'): None\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 03: Menggunakan else dan finally dalam Metode"
+      ],
+      "metadata": {
+        "id": "markdownCell03"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os\n",
+        "\n",
+        "class FileProcessor:\n",
+        "    def __init__(self, nama_file):\n",
+        "        self.nama_file = nama_file\n",
+        "        self._file_handle = None\n",
+        "        print(f\"\\n-> FileProcessor dibuat untuk file: '{self.nama_file}'\")\n",
+        "\n",
+        "    def baca_dan_proses(self):\n",
+        "        print(f\"[{self.nama_file}] Mencoba memproses...\")\n",
+        "        try:\n",
+        "            print(f\"  [{self.nama_file}] Membuka file...\")\n",
+        "            self._file_handle = open(self.nama_file, 'r', encoding=\"utf-8\")\n",
+        "\n",
+        "            print(f\"  [{self.nama_file}] Membaca isi file...\")\n",
+        "            isi = self._file_handle.read()\n",
+        "            print(\" -> File berhasil dibaca.\")\n",
+        "\n",
+        "            print(f\"  [{self.nama_file}] Memproses isi...\")\n",
+        "            panjang_isi = len(isi)\n",
+        "            print(f\" -> Panjang isi: {panjang_isi} karakter.\")\n",
+        "\n",
+        "        except FileNotFoundError:\n",
+        "            print(f\" -> ERROR: File '{self.nama_file}' tidak ditemukan.\")\n",
+        "        except UnicodeDecodeError:\n",
+        "            print(f\" -> ERROR: Gagal membaca '{self.nama_file}' sebagai teks (mungkin file biner?).\")\n",
+        "        except Exception as e:\n",
+        "            print(f\" -> ERROR Lainnya saat memproses file: {type(e).__name__} - {e}\")\n",
+        "        else:\n",
+        "            print(f\" -> PEMROSESAN BERHASIL: Tidak ada error terjadi pada '{self.nama_file}'.\")\n",
+        "        finally:\n",
+        "            print(f\"  [{self.nama_file}] Blok Finally: Melakukan cleanup...\")\n",
+        "            if self._file_handle and not self._file_handle.closed:\n",
+        "                print(f\"   Menutup file '{self.nama_file}'...\")\n",
+        "                self._file_handle.close()\n",
+        "                print(\"   -> File berhasil ditutup.\")\n",
+        "            else:\n",
+        "                print(\"   -> File tidak perlu ditutup (belum dibuka atau sudah ditutup).\")\n",
+        "            print(f\"[{self.nama_file}] Selesai mencoba proses.\")\n",
+        "            print(\"-\" * 30)\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    NAMA_FILE_SUKSES = \"data_penting.txt\"\n",
+        "    NAMA_FILE_GAGAL = \"file_yang_tidak_ada.log\"\n",
+        "\n",
+        "    try:\n",
+        "        with open(NAMA_FILE_SUKSES, \"w\", encoding='utf-8') as f:\n",
+        "            f.write(\"Ini adalah baris pertama.\\n\")\n",
+        "            f.write(\"Baris kedua berisi data penting.\\n\")\n",
+        "        print(f\"File dummy '{NAMA_FILE_SUKSES}' berhasil dibuat.\")\n",
+        "    except IOError as e:\n",
+        "        print(f\"Gagal membuat file dummy '{NAMA_FILE_SUKSES}': {e}\")\n",
+        "\n",
+        "    print(\"\\n--- Skenario 1: Proses Sukses---\")\n",
+        "    processor1 = FileProcessor(NAMA_FILE_SUKSES)\n",
+        "    processor1.baca_dan_proses()\n",
+        "\n",
+        "    print(\"\\n--- Skenario 2: File Tidak Ditemukan ---\")\n",
+        "    processor2 = FileProcessor(NAMA_FILE_GAGAL)\n",
+        "    processor2.baca_dan_proses()\n",
+        "\n",
+        "    try:\n",
+        "        if os.path.exists(NAMA_FILE_SUKSES):\n",
+        "            os.remove(NAMA_FILE_SUKSES)\n",
+        "        print(f\"\\nFile dummy '{NAMA_FILE_SUKSES}' dihapus.\")\n",
+        "    except OSError as e:\n",
+        "        print(f\"\\nGagal menghapus file dummy '{NAMA_FILE_SUKSES}': {e}\")"
+      ],
+      "metadata": {
+        "id": "codeCell03",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "df953965-a700-4e2f-ea97-9b713bccfa8b"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "File dummy 'data_penting.txt' berhasil dibuat.\n",
+            "\n",
+            "--- Skenario 1: Proses Sukses---\n",
+            "\n",
+            "-> FileProcessor dibuat untuk file: 'data_penting.txt'\n",
+            "[data_penting.txt] Mencoba memproses...\n",
+            "  [data_penting.txt] Membuka file...\n",
+            "  [data_penting.txt] Membaca isi file...\n",
+            " -> File berhasil dibaca.\n",
+            "  [data_penting.txt] Memproses isi...\n",
+            " -> Panjang isi: 59 karakter.\n",
+            " -> PEMROSESAN BERHASIL: Tidak ada error terjadi pada 'data_penting.txt'.\n",
+            "  [data_penting.txt] Blok Finally: Melakukan cleanup...\n",
+            "   Menutup file 'data_penting.txt'...\n",
+            "   -> File berhasil ditutup.\n",
+            "[data_penting.txt] Selesai mencoba proses.\n",
+            "------------------------------\n",
+            "\n",
+            "--- Skenario 2: File Tidak Ditemukan ---\n",
+            "\n",
+            "-> FileProcessor dibuat untuk file: 'file_yang_tidak_ada.log'\n",
+            "[file_yang_tidak_ada.log] Mencoba memproses...\n",
+            "  [file_yang_tidak_ada.log] Membuka file...\n",
+            " -> ERROR: File 'file_yang_tidak_ada.log' tidak ditemukan.\n",
+            "  [file_yang_tidak_ada.log] Blok Finally: Melakukan cleanup...\n",
+            "   -> File tidak perlu ditutup (belum dibuka atau sudah ditutup).\n",
+            "[file_yang_tidak_ada.log] Selesai mencoba proses.\n",
+            "------------------------------\n",
+            "\n",
+            "File dummy 'data_penting.txt' dihapus.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 04: Mengakses Objek Exception (as e)"
+      ],
+      "metadata": {
+        "id": "markdownCell04"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class KalkulatorAngka:\n",
+        "    def __init__(self):\n",
+        "        print(\"Kalkulator Angka siap.\")\n",
+        "\n",
+        "    def bagi(self, angka1, angka2):\n",
+        "        print(f\"\\nMencoba membagi '{angka1}' dengan '{angka2}'...\")\n",
+        "        try:\n",
+        "            num1 = float(angka1)\n",
+        "            num2 = float(angka2)\n",
+        "\n",
+        "            if num2 == 0:\n",
+        "                raise ZeroDivisionError(\"Pembagi tidak boleh nol secara eksplisit.\")\n",
+        "\n",
+        "            hasil = num1 / num2\n",
+        "            print(f\" -> Hasil pembagian: {hasil}\")\n",
+        "            return hasil\n",
+        "        except ValueError as e_val:\n",
+        "            print(\" -> ERROR Konversi: Input tidak valid.\")\n",
+        "            print(f\"    Detail Error (ValueError): {e_val}\")\n",
+        "            return None\n",
+        "        except ZeroDivisionError as e_zero:\n",
+        "            print(\" -> ERROR Pembagian: Tidak dapat membagi dengan nol.\")\n",
+        "            print(f\"    Detail Error (ZeroDivisionError): {e_zero}\")\n",
+        "            return None\n",
+        "        except Exception as e:\n",
+        "            print(\" -> ERROR Lainnya: Terjadi kesalahan tak terduga.\")\n",
+        "            print(f\"    Detail Error (Lainnya): {type(e).__name__} - {e}\")\n",
+        "            return None\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    calc = KalkulatorAngka()\n",
+        "    print(\"--- Tes Kalkulator ---\")\n",
+        "\n",
+        "    hasil1 = calc.bagi(100, 5)\n",
+        "    hasil2 = calc.bagi(20, 0)\n",
+        "    hasil3 = calc.bagi(\"limapuluh\", 10)\n",
+        "    hasil4 = calc.bagi(10, [])\n",
+        "\n",
+        "    print(\"\\n--- Ringkasan Hasil ---\")\n",
+        "    print(f\"Hasil 1 (100/5): {hasil1}\")\n",
+        "    print(f\"Hasil 2 (20/0): {hasil2}\")\n",
+        "    print(f\"Hasil 3 ('limapuluh'/10): {hasil3}\")\n",
+        "    print(f\"Hasil 4 (10/[]): {hasil4}\")"
+      ],
+      "metadata": {
+        "id": "codeCell04",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "c097e4f5-dfe5-4191-e331-8ef9722f57f6"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Kalkulator Angka siap.\n",
+            "--- Tes Kalkulator ---\n",
+            "\n",
+            "Mencoba membagi '100' dengan '5'...\n",
+            " -> Hasil pembagian: 20.0\n",
+            "\n",
+            "Mencoba membagi '20' dengan '0'...\n",
+            " -> ERROR Pembagian: Tidak dapat membagi dengan nol.\n",
+            "    Detail Error (ZeroDivisionError): Pembagi tidak boleh nol secara eksplisit.\n",
+            "\n",
+            "Mencoba membagi 'limapuluh' dengan '10'...\n",
+            " -> ERROR Konversi: Input tidak valid.\n",
+            "    Detail Error (ValueError): could not convert string to float: 'limapuluh'\n",
+            "\n",
+            "Mencoba membagi '10' dengan '[]'...\n",
+            " -> ERROR Lainnya: Terjadi kesalahan tak terduga.\n",
+            "    Detail Error (Lainnya): TypeError - float() argument must be a string or a real number, not 'list'\n",
+            "\n",
+            "--- Ringkasan Hasil ---\n",
+            "Hasil 1 (100/5): 20.0\n",
+            "Hasil 2 (20/0): None\n",
+            "Hasil 3 ('limapuluh'/10): None\n",
+            "Hasil 4 (10/[]): None\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 05: Membangkitkan Exception (raise) dalam Metode"
+      ],
+      "metadata": {
+        "id": "markdownCell05"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import locale\n",
+        "\n",
+        "try:\n",
+        "    locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')\n",
+        "except locale.Error:\n",
+        "    print(\"Locale id_ID tidak tersedia.\")\n",
+        "\n",
+        "def format_rupiah(angka):\n",
+        "    try:\n",
+        "        return locale.currency(angka, grouping=True, symbol='Rp')\n",
+        "    except (ValueError, NameError, AttributeError):\n",
+        "        return f\"Rp {angka:,.2f}\"\n",
+        "\n",
+        "class PengelolaAkun:\n",
+        "    def __init__(self, nomor_akun, saldo_awal=0):\n",
+        "        print(f\"\\nMencoba membuat akun {nomor_akun}...\")\n",
+        "        if not isinstance(saldo_awal, (int, float)) or saldo_awal < 0:\n",
+        "            raise ValueError(f\"Saldo awal ({saldo_awal}) tidak valid. Harus angka non-negatif.\")\n",
+        "\n",
+        "        self.nomor_akun = nomor_akun\n",
+        "        self._saldo = float(saldo_awal)\n",
+        "        print(f\" -> Akun {self.nomor_akun} berhasil dibuat dengan saldo: {format_rupiah(self._saldo)}\")\n",
+        "\n",
+        "    def get_saldo(self):\n",
+        "        return self._saldo\n",
+        "\n",
+        "    def tarik_tunai(self, jumlah):\n",
+        "        print(f\"\\n[{self.nomor_akun}] Mencoba tarik tunai: {format_rupiah(jumlah)}\")\n",
+        "\n",
+        "        if not isinstance(jumlah, (int, float)) or jumlah <= 0:\n",
+        "            raise ValueError(f\"Jumlah penarikan ({jumlah}) tidak valid. Harus angka positif.\")\n",
+        "\n",
+        "        if jumlah > self._saldo:\n",
+        "            raise RuntimeError(f\"Saldo tidak mencukupi! Saldo: {format_rupiah(self._saldo)}, Diminta: {format_rupiah(jumlah)}\")\n",
+        "\n",
+        "        self._saldo -= jumlah\n",
+        "        print(f\" -> Penarikan {format_rupiah(jumlah)} berhasil.\")\n",
+        "        print(f\" -> Saldo sekarang: {format_rupiah(self._saldo)}\")\n",
+        "        return True\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    print(\"\\n--- Skenario 1: Saldo Awal Tidak Valid ---\")\n",
+        "    try:\n",
+        "        akun_gagal = PengelolaAkun(\"ACC001\", -50000)\n",
+        "    except ValueError as e:\n",
+        "        print(f\" ERROR DITANGKAP saat pembuatan akun: {e}\")\n",
+        "\n",
+        "    print(\"\\n--- Skenario 2: Akun Valid dan Transaksi ---\")\n",
+        "    try:\n",
+        "        akun_sukses = PengelolaAkun(\"ACC002\", 100000)\n",
+        "        akun_sukses.tarik_tunai(30000)\n",
+        "\n",
+        "        print(\"\\n Mencoba tarik jumlah negatif...\")\n",
+        "        akun_sukses.tarik_tunai(-10000)\n",
+        "    except ValueError as e:\n",
+        "        print(f\" ERROR DITANGKAP (ValueError): {e}\")\n",
+        "    except RuntimeError as e:\n",
+        "        print(f\" ERROR DITANGKAP (RuntimeError): {e}\")\n",
+        "\n",
+        "    print(\"\\n--- Skenario 3: Saldo Tidak Cukup ---\")\n",
+        "    try:\n",
+        "        print(f\" Saldo akun ACC002 saat ini: {format_rupiah(akun_sukses.get_saldo())}\")\n",
+        "        print(\" Mencoba tarik jumlah > saldo...\")\n",
+        "        akun_sukses.tarik_tunai(80000)\n",
+        "    except ValueError as e:\n",
+        "        print(f\" ERROR DITANGKAP (ValueError): {e}\")\n",
+        "    except RuntimeError as e:\n",
+        "        print(f\" ERROR DITANGKAP (RuntimeError): {e}\")\n",
+        "\n",
+        "    print(f\"\\nSaldo akhir akun ACC002: {format_rupiah(akun_sukses.get_saldo())}\")"
+      ],
+      "metadata": {
+        "id": "codeCell05",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "8288aa0e-b49b-4bad-df0c-a9bdcf99d00b"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Locale id_ID tidak tersedia.\n",
+            "\n",
+            "--- Skenario 1: Saldo Awal Tidak Valid ---\n",
+            "\n",
+            "Mencoba membuat akun ACC001...\n",
+            " ERROR DITANGKAP saat pembuatan akun: Saldo awal (-50000) tidak valid. Harus angka non-negatif.\n",
+            "\n",
+            "--- Skenario 2: Akun Valid dan Transaksi ---\n",
+            "\n",
+            "Mencoba membuat akun ACC002...\n",
+            " -> Akun ACC002 berhasil dibuat dengan saldo: Rp 100,000.00\n",
+            "\n",
+            "[ACC002] Mencoba tarik tunai: Rp 30,000.00\n",
+            " -> Penarikan Rp 30,000.00 berhasil.\n",
+            " -> Saldo sekarang: Rp 70,000.00\n",
+            "\n",
+            " Mencoba tarik jumlah negatif...\n",
+            "\n",
+            "[ACC002] Mencoba tarik tunai: Rp -10,000.00\n",
+            " ERROR DITANGKAP (ValueError): Jumlah penarikan (-10000) tidak valid. Harus angka positif.\n",
+            "\n",
+            "--- Skenario 3: Saldo Tidak Cukup ---\n",
+            " Saldo akun ACC002 saat ini: Rp 70,000.00\n",
+            " Mencoba tarik jumlah > saldo...\n",
+            "\n",
+            "[ACC002] Mencoba tarik tunai: Rp 80,000.00\n",
+            " ERROR DITANGKAP (RuntimeError): Saldo tidak mencukupi! Saldo: Rp 70,000.00, Diminta: Rp 80,000.00\n",
+            "\n",
+            "Saldo akhir akun ACC002: Rp 70,000.00\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Praktikum 06: Kombinasi Menangkap dan Membangkitkan Exception"
+      ],
+      "metadata": {
+        "id": "markdownCell06"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class KonfigurasiError(Exception):\n",
+        "    \"\"\"Exception khusus untuk menandakan error terkait konfigurasi aplikasi.\"\"\"\n",
+        "    def __init__(self, message, penyebab_asli=None):\n",
+        "        super().__init__(message)\n",
+        "        self.penyebab_asli = penyebab_asli\n",
+        "\n",
+        "    def __str__(self):\n",
+        "        if self.penyebab_asli:\n",
+        "            return f\"{super().__str__()} \\n (Disebabkan oleh: {type(self.penyebab_asli).__name__})\"\n",
+        "        return super().__str__()\n",
+        "\n",
+        "class PengelolaSetting:\n",
+        "    def __init__(self, file_config):\n",
+        "        self._config = {}\n",
+        "        self.file_config = file_config\n",
+        "\n",
+        "        try:\n",
+        "            self._load_config()\n",
+        "            print(f\"-> PengelolaSetting berhasil dibuat untuk '{self.file_config}'.\")\n",
+        "        except KonfigurasiError as e:\n",
+        "            print(f\"-> GAGAL membuat PengelolaSetting: {e}\")\n",
+        "            self._config = {}\n",
+        "            print(\" -> Menggunakan konfigurasi default/kosong.\")\n",
+        "\n",
+        "    def _load_config(self):\n",
+        "        print(f\"\\n[{self.file_config}] Mencoba load konfigurasi...\")\n",
+        "        try:\n",
+        "            print(f\" Membuka file '{self.file_config}'...\")\n",
+        "            if self.file_config != 'config.txt':\n",
+        "                raise FileNotFoundError(f\"File '{self.file_config}' tidak ada.\")\n",
+        "\n",
+        "            print(f\" Membaca dan validasi isi '{self.file_config}'...\")\n",
+        "            data_raw = {\"host\": \"192.168.1.1\", \"port\": \"8080\"}\n",
+        "\n",
+        "            port_str = data_raw['port']\n",
+        "            port_int = int(port_str)\n",
+        "\n",
+        "            self._config['port'] = port_int\n",
+        "            self._config['host'] = data_raw.get('host', 'localhost')\n",
+        "            print(\" -> Konfigurasi berhasil di-load dan divalidasi.\")\n",
+        "\n",
+        "        except FileNotFoundError as e_fnf:\n",
+        "            print(\" ERROR Bawaan: File tidak ditemukan.\")\n",
+        "            raise KonfigurasiError(f\"File konfigurasi penting '{self.file_config}' hilang.\", penyebab_asli=e_fnf) from e_fnf\n",
+        "        except KeyError as e_key:\n",
+        "            print(\" ERROR Bawaan: Kunci konfigurasi hilang.\")\n",
+        "            raise KonfigurasiError(f\"Kunci '{e_key}' wajib ada dalam file konfigurasi.\", penyebab_asli=e_key) from e_key\n",
+        "        except ValueError as e_val:\n",
+        "            print(\" ERROR Bawaan: Nilai konfigurasi tidak valid.\")\n",
+        "            raise KonfigurasiError(\"Nilai untuk 'port' harus integer.\", penyebab_asli=e_val) from e_val\n",
+        "        except Exception as e_lain:\n",
+        "            print(f\" ERROR Bawaan Tak Terduga: {type(e_lain).__name__}\")\n",
+        "            raise KonfigurasiError(\"Terjadi error tak terduga saat memuat konfigurasi.\", penyebab_asli=e_lain) from e_lain\n",
+        "\n",
+        "    def get_setting(self, key, default=None):\n",
+        "        return self._config.get(key, default)\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    print(\"\\n--- Skenario 1: File Salah ---\")\n",
+        "    settings1 = PengelolaSetting(\"setting.cfg\")\n",
+        "    print(f\" Port dari settings1: {settings1.get_setting('port', 'Belum terload')}\")\n",
+        "\n",
+        "    print(\"\\n--- Skenario 2 & 3: Sukses (Simulasi Data Benar) ---\")\n",
+        "    settings3 = PengelolaSetting(\"config.txt\")\n",
+        "    print(f\" Port dari settings3: {settings3.get_setting('port')}\")\n",
+        "    print(f\" Host dari settings3: {settings3.get_setting('host')}\")"
+      ],
+      "metadata": {
+        "id": "codeCell06",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "00f69b92-742d-45ce-bd41-44ab7c9ee511"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "--- Skenario 1: File Salah ---\n",
+            "\n",
+            "[setting.cfg] Mencoba load konfigurasi...\n",
+            " Membuka file 'setting.cfg'...\n",
+            " ERROR Bawaan: File tidak ditemukan.\n",
+            "-> GAGAL membuat PengelolaSetting: File konfigurasi penting 'setting.cfg' hilang. \n",
+            " (Disebabkan oleh: FileNotFoundError)\n",
+            " -> Menggunakan konfigurasi default/kosong.\n",
+            " Port dari settings1: Belum terload\n",
+            "\n",
+            "--- Skenario 2 & 3: Sukses (Simulasi Data Benar) ---\n",
+            "\n",
+            "[config.txt] Mencoba load konfigurasi...\n",
+            " Membuka file 'config.txt'...\n",
+            " Membaca dan validasi isi 'config.txt'...\n",
+            " -> Konfigurasi berhasil di-load dan divalidasi.\n",
+            "-> PengelolaSetting berhasil dibuat untuk 'config.txt'.\n",
+            " Port dari settings3: 8080\n",
+            " Host dari settings3: 192.168.1.1\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## === Penugasan Jobsheet 07 ===\n",
+        "**PROGRAM HIERARKI KELAS INVENTARIS BARANG**"
+      ],
+      "metadata": {
+        "id": "markdownPenugasan"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Program Hierarki Kelas Inventaris Barang\")\n",
+        "print(\"Ahmad Fajril Falah\")\n",
+        "class InventarisBarang:\n",
+        "    def __init__(self):\n",
+        "        self._items = {}\n",
+        "        print(\"Inventaris Barang siap digunakan...\")\n",
+        "\n",
+        "    def tambah_barang(self, kode, jumlah):\n",
+        "        print(f\"\\n[Tambah Barang] Memproses penambahan {jumlah} unit untuk kode '{kode}'...\")\n",
+        "        try:\n",
+        "            if not isinstance(jumlah, int) or jumlah <= 0:\n",
+        "                raise ValueError(f\"Jumlah ({jumlah}) harus berupa integer positif.\")\n",
+        "        except ValueError as e_val:\n",
+        "            print(f\" -> ERROR ValueError: {e_val}\")\n",
+        "            return\n",
+        "\n",
+        "        if kode in self._items:\n",
+        "            raise KeyError(f\"Error: Kode barang '{kode}' sudah ada.\")\n",
+        "\n",
+        "        self._items[kode] = jumlah\n",
+        "        print(f\" -> Sukses menambahkan barang '{kode}' dengan stok awal {jumlah}.\")\n",
+        "\n",
+        "    def ambil_barang(self, kode, jumlah):\n",
+        "        print(f\"\\n[Ambil Barang] Memproses pengambilan {jumlah} unit dari kode '{kode}'...\")\n",
+        "        try:\n",
+        "            if not isinstance(jumlah, int) or jumlah <= 0:\n",
+        "                raise ValueError(\"Jumlah harus berupa integer positif.\")\n",
+        "        except ValueError as e_val:\n",
+        "            print(f\" -> ERROR ValueError: {e_val}\")\n",
+        "            return\n",
+        "\n",
+        "        try:\n",
+        "            stok_sekarang = self._items[kode]\n",
+        "        except KeyError:\n",
+        "            print(f\" -> ERROR KeyError: Kode barang '{kode}' tidak ditemukan.\")\n",
+        "            return\n",
+        "\n",
+        "        if jumlah > stok_sekarang:\n",
+        "            raise ValueError(f\"Error: Stok barang '{kode}' tidak mencukupi (tersedia: {stok_sekarang}, diminta: {jumlah}).\")\n",
+        "\n",
+        "        self._items[kode] -= jumlah\n",
+        "        print(f\" -> Sukses mengambil {jumlah} unit barang '{kode}'. Sisa stok: {self._items[kode]}\")\n",
+        "\n",
+        "    def cek_stok(self, kode):\n",
+        "        print(f\"\\n[Cek Stok] Memeriksa stok untuk kode '{kode}'...\")\n",
+        "        try:\n",
+        "            stok = self._items[kode]\n",
+        "        except KeyError:\n",
+        "            print(f\" -> Barang dengan kode '{kode}' tidak ditemukan dalam inventaris.\")\n",
+        "        else:\n",
+        "            print(f\" -> Stok barang '{kode}' tersedia sejumlah: {stok}\")\n",
+        "        finally:\n",
+        "            print(f\" -> [Selesai] Pengecekan stok untuk kode '{kode}' telah dilakukan.\")\n",
+        "\n",
+        "if __name__ == \"__main__\":\n",
+        "    inventaris = InventarisBarang()\n",
+        "\n",
+        "    print(\"\\n=== OPERASI TAMBAH BARANG ===\")\n",
+        "    inventaris.tambah_barang(\"B001\", 50)\n",
+        "    inventaris.tambah_barang(\"B002\", 100)\n",
+        "\n",
+        "    inventaris.tambah_barang(\"B003\", -10)\n",
+        "\n",
+        "    try:\n",
+        "        inventaris.tambah_barang(\"B001\", 20)\n",
+        "    except KeyError as e:\n",
+        "        print(f\" -> ERROR KeyError DITANGKAP DI MAIN: {e}\")\n",
+        "\n",
+        "    print(\"\\n=== OPERASI AMBIL BARANG ===\")\n",
+        "    inventaris.ambil_barang(\"B001\", 10)\n",
+        "    inventaris.ambil_barang(\"B099\", 5)\n",
+        "    inventaris.ambil_barang(\"B002\", -5)\n",
+        "\n",
+        "    try:\n",
+        "        inventaris.ambil_barang(\"B001\", 100)\n",
+        "    except ValueError as e:\n",
+        "        print(f\" -> ERROR ValueError DITANGKAP DI MAIN: {e}\")\n",
+        "\n",
+        "    print(\"\\n=== OPERASI CEK STOK ===\")\n",
+        "    inventaris.cek_stok(\"B001\")\n",
+        "    inventaris.cek_stok(\"B099\")"
+      ],
+      "metadata": {
+        "id": "codeCellPenugasan",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "19e89ce0-9ec1-4798-94ef-6f16a6c3c4d4"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Program Hierarki Kelas Inventaris Barang\n",
+            "Ahmad Fajril Falah\n",
+            "Inventaris Barang siap digunakan...\n",
+            "\n",
+            "=== OPERASI TAMBAH BARANG ===\n",
+            "\n",
+            "[Tambah Barang] Memproses penambahan 50 unit untuk kode 'B001'...\n",
+            " -> Sukses menambahkan barang 'B001' dengan stok awal 50.\n",
+            "\n",
+            "[Tambah Barang] Memproses penambahan 100 unit untuk kode 'B002'...\n",
+            " -> Sukses menambahkan barang 'B002' dengan stok awal 100.\n",
+            "\n",
+            "[Tambah Barang] Memproses penambahan -10 unit untuk kode 'B003'...\n",
+            " -> ERROR ValueError: Jumlah (-10) harus berupa integer positif.\n",
+            "\n",
+            "[Tambah Barang] Memproses penambahan 20 unit untuk kode 'B001'...\n",
+            " -> ERROR KeyError DITANGKAP DI MAIN: \"Error: Kode barang 'B001' sudah ada.\"\n",
+            "\n",
+            "=== OPERASI AMBIL BARANG ===\n",
+            "\n",
+            "[Ambil Barang] Memproses pengambilan 10 unit dari kode 'B001'...\n",
+            " -> Sukses mengambil 10 unit barang 'B001'. Sisa stok: 40\n",
+            "\n",
+            "[Ambil Barang] Memproses pengambilan 5 unit dari kode 'B099'...\n",
+            " -> ERROR KeyError: Kode barang 'B099' tidak ditemukan.\n",
+            "\n",
+            "[Ambil Barang] Memproses pengambilan -5 unit dari kode 'B002'...\n",
+            " -> ERROR ValueError: Jumlah harus berupa integer positif.\n",
+            "\n",
+            "[Ambil Barang] Memproses pengambilan 100 unit dari kode 'B001'...\n",
+            " -> ERROR ValueError DITANGKAP DI MAIN: Error: Stok barang 'B001' tidak mencukupi (tersedia: 40, diminta: 100).\n",
+            "\n",
+            "=== OPERASI CEK STOK ===\n",
+            "\n",
+            "[Cek Stok] Memeriksa stok untuk kode 'B001'...\n",
+            " -> Stok barang 'B001' tersedia sejumlah: 40\n",
+            " -> [Selesai] Pengecekan stok untuk kode 'B001' telah dilakukan.\n",
+            "\n",
+            "[Cek Stok] Memeriksa stok untuk kode 'B099'...\n",
+            " -> Barang dengan kode 'B099' tidak ditemukan dalam inventaris.\n",
+            " -> [Selesai] Pengecekan stok untuk kode 'B099' telah dilakukan.\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
